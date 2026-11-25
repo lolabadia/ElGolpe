@@ -77,3 +77,8 @@ INSERT IGNORE INTO objeto (id, nombre, descripcion, precio, efecto) VALUES
     (1, 'Ganzúa', 'Abre puertas cerradas', 50, 'ABRIR_PUERTA'),
     (2, 'Bomba de humo', 'Te da una vida extra', 120, 'VIDA_EXTRA'),
     (3, 'Zapatillas silenciosas', 'Te mueves mas rapido', 200, 'MAS_VELOCIDAD');
+
+-- Museos (los necesita el issue #10; el resto de museos y los vigilantes son del issue #9)
+INSERT IGNORE INTO museo (id, nombre, dificultad, ancho, alto, mapa, recompensa, nombreObra) VALUES
+    (1, 'Museo del Puerto', 1, 12, 8, '', 150, 'La Dama Azul'),
+    (2, 'Galería Real', 2, 12, 8, '', 300, 'El Retrato');

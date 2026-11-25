@@ -3,7 +3,10 @@ package edu.upc.dsa.services;
 import edu.upc.dsa.domain.models.Compra;
 import edu.upc.dsa.domain.models.EntradaInventario;
 import edu.upc.dsa.domain.models.Objeto;
+import edu.upc.dsa.domain.models.Partida;
 import edu.upc.dsa.domain.models.Usuario;
+import edu.upc.dsa.domain.repository.PartidaManager;
+import edu.upc.dsa.domain.repository.PartidaManagerImpl;
 import edu.upc.dsa.domain.repository.TiendaManager;
 import edu.upc.dsa.domain.repository.TiendaManagerImpl;
 import edu.upc.dsa.domain.repository.UsuarioManager;
@@ -12,11 +15,16 @@ import edu.upc.dsa.dto.CompraRespuestaTO;
 import edu.upc.dsa.dto.CompraTO;
 import edu.upc.dsa.dto.InventarioTO;
 import edu.upc.dsa.dto.LoginTO;
+import edu.upc.dsa.dto.ObjetoUsadoTO;
+import edu.upc.dsa.dto.PartidaRespuestaTO;
+import edu.upc.dsa.dto.PartidaTO;
 import edu.upc.dsa.dto.RegistroTO;
 import edu.upc.dsa.dto.UsuarioTO;
 import edu.upc.dsa.exceptions.CredencialesIncorrectas;
 import edu.upc.dsa.exceptions.MonedasInsuficientes;
+import edu.upc.dsa.exceptions.MuseoNoEncontrado;
 import edu.upc.dsa.exceptions.ObjetoNoEncontrado;
+import edu.upc.dsa.exceptions.ObjetosNoDisponibles;
 import edu.upc.dsa.exceptions.UsuarioNoEncontrado;
 import edu.upc.dsa.exceptions.UsuarioYaExiste;
 import io.swagger.annotations.Api;
@@ -29,6 +37,7 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Api(value = "/elgolpe/usuarios", description = "Registre i login d'usuaris")
@@ -37,10 +46,12 @@ public class UsuariosService {
 
     private UsuarioManager um;
     private TiendaManager tm;
+    private PartidaManager pm;
 
     public UsuariosService() {
         this.um = UsuarioManagerImpl.getInstance();
         this.tm = TiendaManagerImpl.getInstance();
+        this.pm = PartidaManagerImpl.getInstance();
     }
 
     @POST
@@ -132,6 +143,42 @@ public class UsuariosService {
             return Response.status(200).entity(entity).build();
         } catch (UsuarioNoEncontrado e) {
             return Response.status(404).build();
+        }
+    }
+
+    @POST
+    @Path("/{id}/partidas")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Guardar el resultado de una partida")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Partida guardada", response = PartidaRespuestaTO.class),
+            @ApiResponse(code = 400, message = "Falta museoId o exito, o los datos no son validos"),
+            @ApiResponse(code = 404, message = "No existe el usuario o el museo"),
+            @ApiResponse(code = 409, message = "El usuario no tiene los objetos usados")
+    })
+    public Response registrarPartida(@PathParam("id") int id, PartidaTO p) {
+        if (p == null || p.getMuseoId() == null || p.getExito() == null || p.getTiempoSegundos() < 0) {
+            return Response.status(400).build();
+        }
+        // juntamos los objetos usados: objetoId -> cantidad total
+        HashMap<Integer, Integer> usados = new HashMap<>();
+        if (p.getObjetosUsados() != null) {
+            for (ObjetoUsadoTO o : p.getObjetosUsados()) {
+                if (o.getCantidad() <= 0) return Response.status(400).build();
+                Integer antes = usados.get(o.getObjetoId());
+                usados.put(o.getObjetoId(), (antes == null ? 0 : antes) + o.getCantidad());
+            }
+        }
+        try {
+            Partida partida = pm.registrarPartida(id, p.getMuseoId(), p.getExito(), p.getTiempoSegundos(), usados);
+            int monedas = um.getUsuario(id).getMonedas();
+            PartidaRespuestaTO r = new PartidaRespuestaTO(partida.getId(), partida.isExito(), partida.getMonedasGanadas(), monedas);
+            return Response.status(201).entity(r).build();
+        } catch (UsuarioNoEncontrado | MuseoNoEncontrado e) {
+            return Response.status(404).build();
+        } catch (ObjetosNoDisponibles e) {
+            return Response.status(409).build();
         }
     }
 
