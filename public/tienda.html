@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>El Golpe - Tienda</title>
+</head>
+<body>
+<h1>Mercado negro</h1>
+
+<p>Usuario: <b id="nombreUsuario"></b> · Monedas: <b id="monedas"></b></p>
+<p><button id="cerrarSesion">Cerrar sesión</button></p>
+
+<h2>Objetos de la tienda</h2>
+<table border="1" cellpadding="5">
+    <thead>
+    <tr><th>Objeto</th><th>Descripción</th><th>Precio</th><th>Cantidad</th><th></th></tr>
+    </thead>
+    <tbody id="tablaObjetos"></tbody>
+</table>
+
+<p id="mensaje"></p>
+
+<h2>Mi inventario</h2>
+<ul id="inventario"></ul>
+
+<script>
+    const API = "/dsaApp/elgolpe";
+
+    // Si no hay sesión, volvemos al login
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+    if (!usuario) {
+        window.location.href = "login.html";
+    }
+
+    document.getElementById("nombreUsuario").textContent = usuario.nombre;
+    document.getElementById("monedas").textContent = usuario.monedas;
+
+    document.getElementById("cerrarSesion").addEventListener("click", function () {
+        localStorage.removeItem("usuario");
+        window.location.href = "login.html";
+    });
+
+    // Listado de objetos de la tienda
+    async function cargarObjetos() {
+        const tabla = document.getElementById("tablaObjetos");
+        try {
+            const res = await fetch(API + "/tienda/objetos");
+            const objetos = await res.json();
+            tabla.innerHTML = "";
+            objetos.forEach(function (o) {
+                const fila = document.createElement("tr");
+                fila.innerHTML =
+                    "<td>" + o.nombre + "</td>" +
+                    "<td>" + o.descripcion + "</td>" +
+                    "<td>" + o.precio + " monedas</td>" +
+                    "<td><input type='number' min='1' value='1' id='cant" + o.id + "' style='width:50px'></td>" +
+                    "<td><button onclick='comprar(" + o.id + ")'>Comprar</button></td>";
+                tabla.appendChild(fila);
+            });
+        } catch (err) {
+            tabla.innerHTML = "<tr><td colspan='5'>No se puede conectar con el servidor.</td></tr>";
+        }
+    }
+
+    // Compra de un objeto
+    async function comprar(objetoId) {
+        const mensaje = document.getElementById("mensaje");
+        const cantidad = parseInt(document.getElementById("cant" + objetoId).value);
+
+        try {
+            const res = await fetch(API + "/usuarios/" + usuario.id + "/compras", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ objetoId: objetoId, cantidad: cantidad })
+            });
+
+            if (res.status === 201) {
+                const compra = await res.json();
+                usuario.monedas = compra.monedasRestantes;
+                localStorage.setItem("usuario", JSON.stringify(usuario));
+                document.getElementById("monedas").textContent = usuario.monedas;
+                mensaje.textContent = "Compra realizada. Has gastado " + compra.precioTotal + " monedas.";
+                cargarInventario();
+            } else if (res.status === 402) {
+                mensaje.textContent = "No tienes monedas suficientes.";
+            } else if (res.status === 400) {
+                mensaje.textContent = "La cantidad no es válida.";
+            } else if (res.status === 404) {
+                mensaje.textContent = "No existe el usuario o el objeto.";
+            } else {
+                mensaje.textContent = "Error " + res.status;
+            }
+        } catch (err) {
+            mensaje.textContent = "No se puede conectar con el servidor.";
+        }
+    }
+
+    // Inventario del jugador (objetos comprados)
+    async function cargarInventario() {
+        const lista = document.getElementById("inventario");
+        try {
+            const res = await fetch(API + "/usuarios/" + usuario.id + "/inventario");
+            const inventario = await res.json();
+            lista.innerHTML = "";
+            if (inventario.length === 0) {
+                lista.innerHTML = "<li>Todavía no tienes objetos.</li>";
+            }
+            inventario.forEach(function (e) {
+                const item = document.createElement("li");
+                item.textContent = e.nombre + " x" + e.cantidad;
+                lista.appendChild(item);
+            });
+        } catch (err) {
+            lista.innerHTML = "<li>No se puede conectar con el servidor.</li>";
+        }
+    }
+
+    cargarObjetos();
+    cargarInventario();
+</script>
+</body>
+</html>

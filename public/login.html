@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>El Golpe - Login</title>
+</head>
+<body>
+<h1>Iniciar sesión</h1>
+
+<form id="formLogin">
+    <p>Nombre: <input type="text" id="nombre" required></p>
+    <p>Contraseña: <input type="password" id="password" required></p>
+    <button type="submit">Entrar</button>
+</form>
+
+<p id="mensaje"></p>
+<p><a href="register.html">¿No tienes cuenta? Regístrate</a></p>
+
+<script>
+    const API = "/dsaApp/elgolpe";
+
+    document.getElementById("formLogin").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        const mensaje = document.getElementById("mensaje");
+
+        const datos = {
+            nombre: document.getElementById("nombre").value,
+            password: document.getElementById("password").value
+        };
+
+        try {
+            const res = await fetch(API + "/usuarios/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(datos)
+            });
+
+            if (res.status === 200) {
+                const usuario = await res.json();
+                // Guardamos el usuario para usarlo en la tienda
+                localStorage.setItem("usuario", JSON.stringify(usuario));
+                window.location.href = "tienda.html";
+            } else if (res.status === 401) {
+                mensaje.textContent = "Nombre o contraseña incorrectos.";
+            } else if (res.status === 400) {
+                mensaje.textContent = "Rellena el nombre y la contraseña.";
+            } else {
+                mensaje.textContent = "Error " + res.status;
+            }
+        } catch (err) {
+            mensaje.textContent = "No se puede conectar con el servidor.";
+        }
+    });
+</script>
+</body>
+</html>
