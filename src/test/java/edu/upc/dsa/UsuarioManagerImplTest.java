@@ -40,4 +40,14 @@ public class UsuarioManagerImplTest {
         Assert.assertThrows(CredencialesIncorrectas.class, () -> um.login("vera", "mala"));
         Assert.assertThrows(CredencialesIncorrectas.class, () -> um.login("nadie", "1234"));
     }
+
+    @Test
+    public void testUsuarioPersiste() throws Exception {
+        Usuario nuevo = um.registrar("nico", "nico@mail.com", "abcd");
+        Usuario leido = um.getUsuario(nuevo.getId());
+        Assert.assertNotNull(leido);
+        Assert.assertEquals("nico", leido.getNombre());
+        Assert.assertEquals("nico@mail.com", leido.getEmail());
+        Assert.assertEquals(100, leido.getMonedas());
+    }
 }

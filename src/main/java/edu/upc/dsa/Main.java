@@ -1,6 +1,8 @@
 package edu.upc.dsa;
 
+import edu.upc.dsa.util.Conexion;
 import io.swagger.jaxrs.config.BeanConfig;
+import org.apache.log4j.Logger;
 import io.swagger.jersey.listing.ApiListingResourceJSON;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.StaticHttpHandler;
@@ -55,6 +57,10 @@ public class Main {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
+        if (!Conexion.comprobar()) {
+            Logger.getLogger(Main.class).error("El servidor no arranca sin base de datos");
+            return;
+        }
         final HttpServer server = startServer();
 
         StaticHttpHandler staticHttpHandler = new StaticHttpHandler("./public/");
