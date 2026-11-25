@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">El Golpe</string>
+
+    <!-- Camps -->
+    <string name="camp_nom">Nom d\'usuari</string>
+    <string name="camp_email">Correu electrònic</string>
+    <string name="camp_contrasenya">Contrasenya</string>
+    <string name="camp_repetir_contrasenya">Repeteix la contrasenya</string>
+
+    <!-- Login -->
+    <string name="login_titol">Inicia sessió</string>
+    <string name="login_boto">Entrar</string>
+    <string name="login_anar_registre">No tens compte? Registra\'t</string>
+
+    <!-- Registre -->
+    <string name="registre_titol">Crea el teu compte</string>
+    <string name="registre_subtitol">Començaràs amb 100 monedes i l\'inventari buit.</string>
+    <string name="registre_boto">Crear compte</string>
+    <string name="registre_anar_login">Ja tens compte? Inicia sessió</string>
+
+    <!-- Pantalla principal -->
+    <string name="main_salutacio">Hola, %1$s!</string>
+    <string name="main_monedes">Monedes: %1$d</string>
+    <string name="main_pendent">Aquí hi anirà la botiga i l\'inventari.</string>
+    <string name="main_tancar_sessio">Tancar sessió</string>
+
+    <!-- Errors de validació -->
+    <string name="error_camp_buit">Aquest camp és obligatori</string>
+    <string name="error_email">El correu no és vàlid</string>
+    <string name="error_contrasenyes">Les contrasenyes no coincideixen</string>
+
+    <!-- Respostes del servidor -->
+    <string name="registre_ok">Compte creat. Benvingut/da!</string>
+    <string name="error_400">Falta algun camp</string>
+    <string name="error_401">Nom d\'usuari o contrasenya incorrectes</string>
+    <string name="error_409">Ja existeix un usuari amb aquest nom</string>
+    <string name="error_servidor">Error del servidor (codi %1$d)</string>
+    <string name="error_connexio">No es pot connectar amb el servidor. Està engegat?</string>
+</resources>

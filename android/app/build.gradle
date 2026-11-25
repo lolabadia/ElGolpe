@@ -1,0 +1,38 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'edu.upc.dsa.elgolpe'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "edu.upc.dsa.elgolpe"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+
+    // Retrofit per cridar l'API REST del servidor
+    implementation 'com.squareup.retrofit2:retrofit:2.11.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.11.0'
+    // Mostra al Logcat les peticions i respostes (útil per depurar)
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+}
