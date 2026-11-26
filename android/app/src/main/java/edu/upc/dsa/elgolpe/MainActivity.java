@@ -7,9 +7,11 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import edu.upc.dsa.elgolpe.botiga.BotigaActivity;
+import edu.upc.dsa.elgolpe.botiga.InventariActivity;
+
 /**
- * Pantalla després del login. De moment només mostra l'usuari i les monedes;
- * aquí és on s'enllaçaran la botiga i l'inventari.
+ * Pantalla després del login: mostra l'usuari i les monedes i porta a la botiga i a l'inventari.
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +28,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_main);
+
+        Button btnBotiga = findViewById(R.id.btnBotiga);
+        Button btnInventari = findViewById(R.id.btnInventari);
+        btnBotiga.setOnClickListener(v -> startActivity(new Intent(this, BotigaActivity.class)));
+        btnInventari.setOnClickListener(v -> startActivity(new Intent(this, InventariActivity.class)));
 
         Button btnTancarSessio = findViewById(R.id.btnTancarSessio);
         btnTancarSessio.setOnClickListener(v -> {
