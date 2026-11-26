@@ -18,11 +18,19 @@
         android:layout_marginTop="8dp"
         android:textAppearance="?attr/textAppearanceSubtitle1" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/btnBotiga"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="@string/main_pendent" />
+        android:text="@string/main_anar_botiga" />
+
+    <Button
+        android:id="@+id/btnInventari"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/main_anar_inventari" />
 
     <View
         android:layout_width="match_parent"

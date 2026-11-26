@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Pantalla principal: botons per anar a la botiga i a l'inventari -->
+    <string name="main_anar_botiga">Botiga</string>
+    <string name="main_anar_inventari">El meu inventari</string>
+
+    <!-- Botiga -->
+    <string name="botiga_titol">Botiga</string>
+    <string name="botiga_preu">%1$d monedes</string>
+    <string name="botiga_comprar">Comprar</string>
+    <string name="botiga_comprar_titol">Comprar %1$s</string>
+    <string name="botiga_total">Total: %1$d monedes · Et quedaran %2$d</string>
+    <string name="botiga_compra_ok">Has comprat %1$d × %2$s</string>
+    <string name="botiga_buida">La botiga no té cap objecte</string>
+    <string name="botiga_sense_monedes_titol">No tens prou monedes</string>
+    <string name="botiga_sense_monedes">Necessites %1$d monedes i en tens %2$d. Juga algun nivell per guanyar-ne més.</string>
+
+    <!-- Inventari -->
+    <string name="inventari_titol">El meu inventari</string>
+    <string name="inventari_quantitat">Unitats: %1$d</string>
+    <string name="inventari_retornar">Retornar</string>
+    <string name="inventari_retornar_titol">Retornar %1$s</string>
+    <string name="inventari_retornar_resum">Retornes %1$d de %2$d unitats</string>
+    <string name="inventari_retorn_ok">Has retornat %1$d × %2$s (+%3$d monedes)</string>
+    <string name="inventari_buit">L\'inventari és buit. Compra alguna cosa a la botiga!</string>
+
+    <!-- Errors -->
+    <string name="tocar_reintentar">Toca per tornar-ho a provar</string>
+    <string name="error_quantitat">La quantitat no és vàlida</string>
+    <string name="error_objecte_no_existeix">Aquest objecte ja no existeix</string>
+    <string name="error_usuari_no_existeix">No s\'ha trobat l\'usuari. Torna a iniciar sessió.</string>
+    <string name="error_no_tens_prou">No tens tantes unitats d\'aquest objecte</string>
+    <string name="error_retorn_404">No s\'ha pogut retornar: el servidor no troba l\'objecte o encara no té la ruta de devolucions</string>
+</resources>
